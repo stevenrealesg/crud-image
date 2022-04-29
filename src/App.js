@@ -1,8 +1,33 @@
+import { useEffect, useState } from 'react';
 import './App.css';
+import Form from './components/Form';
 import User from './components/User';
+import { getList, remove } from './services/user'
 
 function App() {
 
+  const [users, setUsers] = useState([]);
+  const [userUpdate, setUserUpdate] = useState({});
+
+  useEffect(() => {
+    const getData = async () => {
+      const users = await getList()
+      setUsers(users)
+    }
+    getData()
+  }, [])
+
+  const handleUpdate = (user) => {
+    setUserUpdate(user)
+  }
+
+  const handleDelete = async (id) => {
+    const res = await remove(id) 
+    if (res) {
+      const users = await getList()
+      setUsers(users)
+    }
+  }
 
   return (
     <div className="container">
@@ -11,12 +36,11 @@ function App() {
       <div className='row'>
         <div className='col-md-6'>
           <h3>Agregar usuario</h3>
+          <Form userUpdate={userUpdate}/>
         </div>
         <div className='col-md-6'>
           <h3>Lista de usuarios</h3>
-          <User/>
-          <User/>
-          <User/>
+          {users.map(user => <User key={user.id} userData={user} handleUpdate={() => handleUpdate(user)} handleDelete={() => handleDelete(user.id)} />)}
         </div>
       </div>
     </div>

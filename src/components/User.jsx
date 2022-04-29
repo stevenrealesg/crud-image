@@ -1,17 +1,25 @@
 import { useEffect, useState } from "react"
 
-function User() {
-
+function User({ userData, handleUpdate, handleDelete }) {
+    const { name, lastName, email, user } = userData
+    const [isLoading, setIsLoading] = useState(false)
     const [image, setImage] = useState("")
 
     useEffect(() => {
-        const getImage = async () => {
-            const { url } = await fetch('https://picsum.photos/200')
-            setImage(url)
-            return url
-        }
-        getImage()
+        setIsLoading(true)
     }, [])
+
+    useEffect(() => {
+        if(isLoading){
+            const getImage = async () => {
+                const { url } = await fetch('https://picsum.photos/200')
+                setImage(url)
+                return url
+            }
+            getImage()
+            setIsLoading(false)
+        }
+    }, [isLoading])
 
     return (
         <div className="col-md-12 mb-3">
@@ -22,9 +30,11 @@ function User() {
                     </div>
                     <div className="col-md-8">
                         <div className="card-body">
-                            <h5 className="card-title">Card title</h5>
-                            <p className="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                            <p className="card-text"><small className="text-muted">Last updated 3 mins ago</small></p>
+                            <h5 className="card-title">{name} {lastName}</h5>
+                            <p className="card-text">{email}</p>
+                            <p className="card-text"><small className="text-muted"><i className="bi bi-person-fill"></i> {user}</small></p>
+                            <button className="btn btn-link" onClick={handleUpdate}><i className="bi bi-pencil-fill"></i> Editar</button>
+                            <button className="btn btn-link text-danger" onClick={handleDelete}><i className="bi bi-trash3-fill"></i> Eliminar</button>
                         </div>
                     </div>
                 </div>
