@@ -12,7 +12,6 @@ const getList = async () => {
 }
 
 const save = async (user) => {
-    console.log("Guardando usuario", user)
     try {
         const db = firebase.firestore()
         await db.collection('users').add(user)

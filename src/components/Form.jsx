@@ -1,7 +1,7 @@
-import { useState } from "react"
-import { save } from '../services/user'
+import { useEffect, useState } from "react"
+import { save, update } from '../services/user'
 
-function Form() {
+function Form({ userUpdate, setUserUpdate, getData }) {
 
     const [name, setName] = useState("")
     const [lastName, setLastName] = useState("")
@@ -42,10 +42,42 @@ function Form() {
         return true
     }
 
+    const resetForm = () => {
+        setName("")
+        setLastName("")
+        setEmail("")
+        setUser("")
+        setPassword("")
+        setUserUpdate(null)
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault()
-        if(validateForm()) await save({ name, lastName, email, user, password })
+        if(validateForm()){
+            await save({ name, lastName, email, user, password })
+            getData()
+            resetForm()
+        }
     }
+
+    const handleUpdate = async (e) => {
+        e.preventDefault()
+        if(validateForm()){
+            await update(userUpdate.id, { name, lastName, email, user, password })
+            getData()
+            resetForm()
+        }
+    }
+
+    useEffect(() => {
+        if(userUpdate) {
+            setName(userUpdate.name)
+            setLastName(userUpdate.lastName)
+            setEmail(userUpdate.email)
+            setUser(userUpdate.user)
+            setPassword(userUpdate.password)
+        }
+    }, [userUpdate])
 
     return (
         <div className="col">
@@ -66,7 +98,7 @@ function Form() {
                         </div>
                         <div className="form-group mb-3">
                             <label className="form-label">Usuario</label>
-                            <input type="text" className="form-control" name="user" value={user} onChange={handleChangeUser} />
+                            <input type="email" className="form-control" name="user" value={user} onChange={handleChangeUser} />
                         </div>
                         <div className="form-group mb-3">
                             <label className="form-label">Contraseña</label>
@@ -74,7 +106,15 @@ function Form() {
                         </div>
                         {error && <div className="alert alert-danger"><i className="bi bi-exclamation-circle-fill"></i> {error}</div>}
                         <div className="d-flex justify-content-end">
-                            <button className="btn btn-primary" onClick={handleSubmit}>Guardar</button>
+                            {
+                                userUpdate ?
+                                    <div>
+                                        <button type="button" className="btn btn-secondary me-2" onClick={() => resetForm()}>Cancelar</button>
+                                        <button type="button" className="btn btn-warning" onClick={handleUpdate}>Actualizar</button>
+                                    </div>
+                                    :
+                                    <button type="button" className="btn btn-primary" onClick={handleSubmit}>Guardar</button>
+                            }
                         </div>
                     </form>
                 </div>

@@ -7,13 +7,14 @@ import { getList, remove } from './services/user'
 function App() {
 
   const [users, setUsers] = useState([]);
-  const [userUpdate, setUserUpdate] = useState({});
+  const [userUpdate, setUserUpdate] = useState(null);
+
+  const getData = async () => {
+    const users = await getList()
+    setUsers(users)
+  }
 
   useEffect(() => {
-    const getData = async () => {
-      const users = await getList()
-      setUsers(users)
-    }
     getData()
   }, [])
 
@@ -36,7 +37,7 @@ function App() {
       <div className='row'>
         <div className='col-md-6'>
           <h3>Agregar usuario</h3>
-          <Form userUpdate={userUpdate}/>
+          <Form userUpdate={userUpdate} setUserUpdate={setUserUpdate} getData={getData}/>
         </div>
         <div className='col-md-6'>
           <h3>Lista de usuarios</h3>
