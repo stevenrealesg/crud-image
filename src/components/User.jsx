@@ -1,11 +1,24 @@
-function User({ image }) {
+import { useEffect, useState } from "react"
+
+function User() {
+
+    const [image, setImage] = useState("")
+
+    useEffect(() => {
+        const getImage = async () => {
+            const { url } = await fetch('https://picsum.photos/200')
+            setImage(url)
+            return url
+        }
+        getImage()
+    }, [])
 
     return (
         <div className="col-md-12 mb-3">
             <div className="card mb-3">
                 <div className="row g-0">
                     <div className="col-md-4">
-                        {/* <img src={image} className="img-fluid rounded-start" alt="" /> */}
+                        <img src={image} className="img-fluid rounded-start" alt="" />
                     </div>
                     <div className="col-md-8">
                         <div className="card-body">

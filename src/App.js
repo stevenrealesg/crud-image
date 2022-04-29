@@ -3,11 +3,6 @@ import User from './components/User';
 
 function App() {
 
-  const getImage = async () => {
-    const { url } = await fetch('https://picsum.photos/200')
-    console.log(url)
-    return url
-  }
 
   return (
     <div className="container">
@@ -19,7 +14,7 @@ function App() {
         </div>
         <div className='col-md-6'>
           <h3>Lista de usuarios</h3>
-          <User image={() => getImage()}/>
+          <User/>
           <User/>
           <User/>
         </div>
