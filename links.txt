@@ -1,0 +1,2 @@
+AWS: https://main.ddjfe3qsxzikn.amplifyapp.com/
+Netlify: https://crud-image.netlify.app/
