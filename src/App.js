@@ -1,13 +1,11 @@
 import { useEffect, useState } from 'react';
 import './App.css';
-import Form from './components/Form';
 import User from './components/User';
-import { getList, remove } from './services/user'
+import { getList, remove, save } from './services/user'
 
 function App() {
 
   const [users, setUsers] = useState([]);
-  const [userUpdate, setUserUpdate] = useState(null);
 
   const getData = async () => {
     const users = await getList()
@@ -19,29 +17,33 @@ function App() {
   }, [])
 
   const handleUpdate = (user) => {
-    setUserUpdate(user)
   }
 
   const handleDelete = async (id) => {
-    const res = await remove(id) 
+    const res = await remove(id)
     if (res) {
       const users = await getList()
       setUsers(users)
     }
   }
 
+  const addUser = async () => {
+    const res = await save()
+    if (res) {
+      const users = await getList()
+      setUsers(users)
+    }
+  }
   return (
     <div className="container">
       <h2>Gestión de usuarios</h2>
-      <hr/>
-      <div className='row'>
-        <div className='col-md-6'>
-          <h3>Agregar usuario</h3>
-          <Form userUpdate={userUpdate} setUserUpdate={setUserUpdate} getData={getData}/>
+      <hr />
+      <div className='row justify-content-md-center'>
+        <div className='col col-md-10 text-end'>
+          <button className="btn btn-primary mb-3" onClick={addUser}>Agregar usuario al azar</button>
         </div>
-        <div className='col-md-6'>
-          <h3>Lista de usuarios</h3>
-          {users.map(user => <User key={user.id} userData={user} handleUpdate={() => handleUpdate(user)} handleDelete={() => handleDelete(user.id)} />)}
+        <div className='row justify-content-center'>
+          {users.map(user => <User key={user.id} userData={user} handleUpdate={() => handleUpdate(user)} handleDelete={() => handleDelete(user.id)} getData={getData} />)}
         </div>
       </div>
     </div>
