@@ -11,10 +11,21 @@ const getList = async () => {
     }
 }
 
-const save = async (user) => {
+const save = async () => {
     try {
+        const res = await fetch('https://randomuser.me/api/')
+        const data = await res.json()
+        const user = data.results[0]
+        const newUser = {
+            name: user.name.first,
+            lastName: user.name.last,
+            email: user.email,
+            picture: user.picture.large,
+            user: user.login.username,
+            password: user.login.password
+        }
         const db = firebase.firestore()
-        await db.collection('users').add(user)
+        await db.collection('users').add(newUser)
         return true
     } catch (error) {
         console.log("Error al guardar el usuario", error)
